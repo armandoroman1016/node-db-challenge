@@ -7,12 +7,9 @@ module.exports = {
 
 function find(id){
     return db('task as t')
-    .where('t.project_id', id)
-    .join('project_resources as pr')
-    .on('pr.project_id', id)
-    .join('project as p')
-    .on('p.id', id)
-    .select('p.id as project_id', 'p.name as project_name', 'p.description as project_description' ,'t.id as task_id', 't.description as task_description', 't.notes as task_notes', 't.completed')
+    .select(['t.id as task_id', 't.description as task_description', 't.notes as task_notes', 't.completed','p.name as project_name','p.description as project_description'])
+    .join('project as p', 'p.id', 't.project_id')
+    .where({project_id: id})
     .then(tasks => tasks)
 }
 
